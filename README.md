@@ -47,8 +47,8 @@
 
 ```
 my-astro-blog/
-├── .github/workflows/
-│   └── deploy.yml              # GitHub Actions 自动部署
+├── .github_disabled/            # GitHub Actions 配置（需重命名为 .github/）
+│   └── deploy.yml               # 自动部署 workflow
 ├── public/
 │   └── favicon.svg             # 网站图标
 ├── src/
@@ -155,12 +155,18 @@ Frontmatter 字段说明：
 
 ### 自动部署（推荐）
 
-项目已配置好 GitHub Actions，只需：
+项目已准备好 GitHub Actions 配置，只需：
 
 1. **Fork 或推送** 到你的 GitHub 仓库
-2. 进入 **Settings → Pages**
-3. Source 选择 **GitHub Actions**
+2. 将 `.github_disabled/` 重命名为 `.github/`：
+   ```bash
+   mv .github_disabled .github
+   git add . && git commit -m "enable github actions" && git push
+   ```
+3. 进入 **Settings → Pages → Source → 选择 GitHub Actions**
 4. 推送代码到 `main` 分支 ✅
+
+> 💡 `.github_disabled/` 是因为 Token 权限限制无法推送 workflow 文件，手动启用即可。
 
 Actions 会自动：`安装依赖 → 构建 → 部署`
 

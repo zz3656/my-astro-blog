@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { SITE_TITLE } from '../../consts';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<BaseLayout title={`所有文章 | ${SITE_TITLE}`}>
+  <section class="blog-list">
+    <h1>所有文章</h1>
+    <p class="blog-count">共 {posts.length} 篇</p>
+    <ul class="post-list">
+      {posts.map((post) => (
+        <PostCard
+          href={`/blog/${post.slug}/`}
+          title={post.data.title}
+          pubDate={post.data.pubDate}
+          description={post.data.description}
+          tags={post.data.tags}
+        />
+      ))}
+    </ul>
+  </section>
+</BaseLayout>

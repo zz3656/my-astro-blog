@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const recentPosts = posts.slice(0, 6);
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <section class="hero">
+    <h1>👋 欢迎来到我的博客</h1>
+    <p class="hero-desc">
+      分享技术心得、学习笔记和生活感悟。使用 Astro 构建，快速、现代、优雅。
+    </p>
+    <div class="hero-actions">
+      <a href="/blog" class="btn btn-primary">浏览全部文章 →</a>
+      <a href="/about" class="btn btn-secondary">了解更多</a>
+    </div>
+  </section>
+
+  <section class="recent-posts">
+    <h2 class="section-title">最新文章</h2>
+    <ul class="post-grid">
+      {recentPosts.map((post) => (
+        <PostCard
+          href={`/blog/${post.slug}/`}
+          title={post.data.title}
+          pubDate={post.data.pubDate}
+          description={post.data.description}
+          tags={post.data.tags}
+        />
+      ))}
+    </ul>
+    {posts.length > 6 && (
+      <div class="view-all">
+        <a href="/blog">查看全部 {posts.length} 篇文章 →</a>
+      </div>
+    )}
+  </section>
+</BaseLayout>
